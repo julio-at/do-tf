@@ -1,0 +1,38 @@
+#cloud-config
+# Configuración robusta y mínima para validar cloud-init + endurecimiento básico.
+
+users:
+  - name: deploy
+    gecos: "Deployment User"
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    # Si quieres añadir tu key, pégala aquí en UNA sola línea sin saltos:
+    # ssh_authorized_keys:
+    #   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQ... julio@mbp
+
+package_update: true
+package_upgrade: true
+packages:
+  - ufw
+  - fail2ban
+  - htop
+  - curl
+  - git
+
+write_files:
+  - path: /root/ready.txt
+    permissions: '0644'
+    content: |
+      cloud-init: archivo creado OK
+
+runcmd:
+  - ufw allow OpenSSH
+  - ufw allow 80
+  - ufw allow 443
+  - ufw --force enable
+  - systemctl enable fail2ban
+  - systemctl start fail2ban
+  - 'echo "runcmd OK" >> /root/ready.txt'
+  - 'logger "cloud-init completed successfully"'
+
