@@ -5,6 +5,12 @@ It includes modular infrastructure, cloud-init user data, and clean variable man
 
 ---
 
+## Clone this repo
+
+```
+git clone https://github.com/julio-at/do-tf.git
+cd do-tf
+```
 ## 📁 Project Structure
 
 ```
